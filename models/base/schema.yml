@@ -1,0 +1,19 @@
+# dbt mechanism to describe and test models and sources 
+version: 2
+
+#models:
+
+sources:
+  # Source block contains a pointer to each RAW Source
+  - name: raw_stg
+    database: dbt_sf_mmc
+    schema: public
+    tables:
+      - name: stg_crypto
+        description: "stg crypto raw data"
+      - name: stg_etfs
+        description: "stg etfs raw data"
+      - name: stg_forex
+        description: "stg forex raw data"
+      - name: stg_stocks
+        description: "stg stocks raw data"
