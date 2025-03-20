@@ -7,7 +7,7 @@ sources:
   # Source block contains a pointer to each RAW Source
   - name: raw_stg
     database: dbt_sf_mmc
-    schema: public
+    schema: raw
     tables:
       - name: stg_crypto
         description: "stg crypto raw data"

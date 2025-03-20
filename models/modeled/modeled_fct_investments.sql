@@ -11,53 +11,12 @@
 
 with
 investment_source as(
-    select 
-        MD5('Crypto'||meta_type) as INVESTMENT_SK            
-        , MD5(meta_symbol) as TICKER_SK
-        , MD5(meta_exchange) as MARKETPLACE_SK
-        , MD5(values_datetime) as DATE_SK
-        , values_open as OPENING_PRICE
-        , values_close as CLOSING_PRICE
-        , values_high as HIGHEST_PRICE
-        , values_low as LOWEST_PRICE
-        , null as VOLUME
-    from {{ ref('crypto') }}
-    UNION
-    select 
-        MD5('ETFS'||meta_type) as INVESTMENT_SK            
-        , MD5(meta_symbol) as TICKER_SK
-        , MD5(meta_exchange) as MARKETPLACE_SK
-        , MD5(values_datetime) as DATE_SK
-        , values_open as OPENING_PRICE
-        , values_close as CLOSING_PRICE
-        , values_high as HIGHEST_PRICE
-        , values_low as LOWEST_PRICE
-        , values_volume as VOLUME
-    from {{ ref('etfs') }}
-    UNION
-    select 
-        MD5('Forex'||meta_type) as INVESTMENT_SK            
-        , MD5(meta_symbol) as TICKER_SK
-        , null as MARKETPLACE_SK
-        , MD5(values_datetime) as DATE_SK
-        , values_open as OPENING_PRICE
-        , values_close as CLOSING_PRICE
-        , values_high as HIGHEST_PRICE
-        , values_low as LOWEST_PRICE
-        , null as VOLUME
-    from {{ ref('forex') }}
-    UNION
-    select 
-        MD5('Stocks'||meta_type) as INVESTMENT_SK            
-        , MD5(meta_symbol) as TICKER_SK
-        , MD5(meta_exchange) as MARKETPLACE_SK
-        , MD5(values_datetime) as DATE_SK
-        , values_open as OPENING_PRICE
-        , values_close as CLOSING_PRICE
-        , values_high as HIGHEST_PRICE
-        , values_low as LOWEST_PRICE
-        , values_volume as VOLUME
-    from {{ ref('stocks') }}
+    select * 
+        , MD5(INVESTMENT||INVESTMENT_TYPE) as INVESTMENT_SK            
+        , MD5(SYMBOL) as TICKER_SK
+        , MD5(EXCHANGE) as MARKETPLACE_SK
+        , MD5(DATE) as DATE_SK
+    from {{ ref('blended_fct_investments') }} 
 ),
 
 fct_investments as (
@@ -86,5 +45,6 @@ fct_investments as (
         on d.DATE_SK = s.DATE_SK
     left join {{ ref('modeled_dim_marketplace') }} m
         on m.MARKETPLACE_SK = s.MARKETPLACE_SK
-) 
+)
+
 select * from fct_investments
